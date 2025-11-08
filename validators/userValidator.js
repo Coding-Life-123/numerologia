@@ -46,7 +46,7 @@ export const validateNewUser = [
 ];
 
 export const validateGetUsers = [
-  //No se necesitan validaciones para GET, pero se pueden agregar parámetros de consulta si es necesario.
+  // Para GET no necesitamos validaciones, pero podríamos agregar filtros si fuera necesario
   (req, res, next) => {
     next();
   },

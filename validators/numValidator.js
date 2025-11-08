@@ -6,7 +6,7 @@ export const validateGetNums = [
   },
 ];
 
-// Espacio reservado para futuras validaciones, por ejemplo, para crear un número
+// Aquí podríamos agregar más validaciones en el futuro, como para crear un número
 export const validateNewNum = [
   body("numero")
     .isNumeric()
