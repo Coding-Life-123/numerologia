@@ -44,10 +44,3 @@ export const validateNewUser = [
     next();
   },
 ];
-
-export const validateGetUsers = [
-  // Para GET no necesitamos validaciones, pero podríamos agregar filtros si fuera necesario
-  (req, res, next) => {
-    next();
-  },
-];

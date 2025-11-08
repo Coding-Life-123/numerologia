@@ -4,7 +4,7 @@ import { validateGetNums, validateNewNum } from "../validators/numValidator.js";
 
 const router = Router();
 
-router.get("/", validateGetNums, getNums);
+router.get("/", getNums);
 router.post("/", validateNewNum, newNum);
 
 export default router;

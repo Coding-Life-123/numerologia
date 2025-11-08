@@ -1,12 +1,5 @@
 import { body, validationResult } from "express-validator";
 
-export const validateGetNums = [
-  (req, res, next) => {
-    next();
-  },
-];
-
-// Aquí podríamos agregar más validaciones en el futuro, como para crear un número
 export const validateNewNum = [
   body("numero")
     .isNumeric()
