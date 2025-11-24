@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUsers, newUser, updateUser } from "../controllers/userController.js";
+import { deleteUser, estadoUser, getUsers, newUser, updateUser } from "../controllers/userController.js";
 import {
   validateNewUser,
   validateUpdateUser,
@@ -7,10 +7,11 @@ import {
 
 const router = Router();
 
-router.post("/new-user", validateNewUser, newUser);
+router.post("/", validateNewUser, newUser);
 router.get("/", getUsers);
 router.get("/:id", getUsers);
-router.patch("/update-user/:id", validateUpdateUser, updateUser);
-router.delete("/delete-user/:id", validateUpdateUser, deleteUser);
+router.patch("/:id", validateUpdateUser, updateUser);
+router.patch("/estado/:id", estadoUser)
+router.delete("/:id", validateUpdateUser, deleteUser);
 
 export default router;
