@@ -89,3 +89,17 @@ export async function estadoUserModel(id, {estado}){
     throw new Error("Error interno del servidor");
   };
 };
+
+export async function getEstadoModel({id}){
+  try{
+    const [rows] = await pool.execute(
+      "SELECT u.estado AS estado_usuario, p.fecha_vencimiento FROM users u LEFT JOIN payments p ON p.usuario_id = u.id WHERE u.id = ? ORDER BY p.fecha_vencimiento DESC LIMIT 1;",
+      [id]
+    );
+    
+    return rows;
+  }catch(error){
+    console.log(error);
+    throw new Error("Error interno del servidor");
+  };
+};

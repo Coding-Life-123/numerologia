@@ -1,24 +1,28 @@
 import pool from "../config/db.js";
 
-// Función para crear un nuevo número
-export async function createNum({ numero, descripcion }) {
+export async function createLectureModel({ id, tipo, lectura, fecha_lectura }) {
   try {
     const [result] = await pool.execute(
-      "INSERT INTO nums (numero, descripcion) VALUES (?, ?)",
-      [numero, descripcion]
+      "INSERT INTO lectures (usuario_id, tipo, contenido, fecha_lectura) VALUES (?, ?, ?, ?)",
+      [id, tipo, lectura, fecha_lectura]
     );
-    return result.insertId; // Retorna el ID del nuevo registro
+    return result;
   } catch (error) {
-    throw new Error("Error al crear el número: " + error.message);
+    throw new Error("Error al crear el número: " + error);
   }
 }
 
-// Función para obtener todos los números
-export async function getNums() {
+export async function getLectureModel(id, lectureId) {
   try {
-    const [rows] = await pool.execute("SELECT * FROM nums");
+    if(lectureId){
+      const [rows] = await pool.execute("SELECT * FROM lectures WHERE usuario_id = ? AND id = ?", [id, lectureId]);
+
+      return rows;
+    }
+    const [rows] = await pool.execute("SELECT * FROM lectures WHERE usuario_id = ?", [id]);
+
     return rows;
   } catch (error) {
-    throw new Error("Error al obtener los números: " + error.message);
+    throw new Error("Error al obtener los números: " + error);
   }
 }
