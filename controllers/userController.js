@@ -1,34 +1,36 @@
-import crypto from "crypto";
+import { createUser, getUsersModel, updateUsersModel } from "../models/userModel.js";
 
 export const newUser = async (req, res) => {
   try {
-    const { cc } = req.query;
-    const { nombre, apellido, edad, nombre_completo, lugar_nacimiento, sexo } =
-      req.body;
-    const userId = crypto.randomUUID();
-
-    res.status(201).json({
-      message: "Usuario creado exitosamente",
-      user: {
-        id: userId,
-        cc,
-        nombre,
-        apellido,
-        edad,
-        nombre_completo,
-        lugar_nacimiento,
-        sexo,
-      },
-    });
+    const usuario = await createUser(req.body, res);
+    console.log(req.body);
+    res.status(201).json(usuario);
   } catch (error) {
-    res.status(500).json({ message: "Error interno del servidor" });
+    console.log(error);
+    res.status(500).json({ Error: error });
   }
 };
 
 export const getUsers = async (req, res) => {
+  console.log(req.params.id);
   try {
-    res.json({ message: "Lista de usuarios", users: [] });
+    const users = await getUsersModel(req.params);
+    res.status(200).json({ message: "Lista de usuarios", users: users });
   } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  const {id} = req.params;
+  console.log(req.body);
+  try{
+    const userUpdated = await updateUsersModel(id, req.body);
+    console.log(userUpdated);
+    res.status(200).json(userUpdated)
+  }catch(error){
+    console.log(error);
     res.status(500).json({ message: "Error interno del servidor" });
   }
 };

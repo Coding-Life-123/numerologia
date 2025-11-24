@@ -1,41 +1,21 @@
-import { body, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 
 export const validateNewUser = [
-  body("cc")
-    .isNumeric()
-    .withMessage("La cédula debe ser un número")
-    .isLength({ min: 7, max: 10 })
-    .withMessage("La cédula debe tener entre 7 y 10 dígitos"),
   body("nombre")
     .isString()
     .withMessage("El nombre debe ser una cadena de texto")
     .notEmpty()
     .withMessage("El nombre es requerido"),
-  body("apellido")
+  body("email")
     .isString()
-    .withMessage("El apellido debe ser una cadena de texto")
+    .withMessage("El email debe ser una cadena de texto")
     .notEmpty()
-    .withMessage("El apellido es requerido"),
-  body("edad")
-    .isNumeric()
-    .withMessage("La edad debe ser un número")
-    .isInt({ min: 0, max: 120 })
-    .withMessage("La edad debe ser un número entero entre 0 y 120"),
-  body("nombre_completo")
+    .withMessage("El email es requerido"),
+  body("fecha_nacimiento")
     .isString()
-    .withMessage("El nombre completo debe ser una cadena de texto")
+    .withMessage("La fecha de nacimiento debe ser una cadena de texto")
     .notEmpty()
-    .withMessage("El nombre completo es requerido"),
-  body("lugar_nacimiento")
-    .isString()
-    .withMessage("El lugar de nacimiento debe ser una cadena de texto")
-    .notEmpty()
-    .withMessage("El lugar de nacimiento es requerido"),
-  body("sexo")
-    .isString()
-    .withMessage("El sexo debe ser una cadena de texto")
-    .isIn(["M", "F"])
-    .withMessage("El sexo debe ser M o F"),
+    .withMessage("La fecha de nacimiento es requerido"),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -44,3 +24,28 @@ export const validateNewUser = [
     next();
   },
 ];
+
+export const validateUpdateUser = [
+  param("id")
+    .notEmpty()
+    .withMessage("El Id es requerido")
+    .isNumeric()
+    .withMessage("El id debe ser de tipo numérico"),
+  body("nombre")
+    .optional()
+    .isString()
+    .withMessage("El nombre debe ser una cadena de texto"),
+  body("email")
+    .optional()
+    .isString()
+    .withMessage("El nombre debe ser una cadena de texto"),
+  body("fecha_nacimiento")
+    .optional()
+    .isString()
+    .withMessage("El nombre debe ser una cadena de texto"),
+  body("estado")
+    .optional()
+    .isString()
+    .withMessage("El nombre debe ser una cadena de texto"),
+]
+

@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { getNums, newNum } from "../controllers/numController.js";
-import { validateGetNums, validateNewNum } from "../validators/numValidator.js";
+import { dailyLecture, getNums, newNum } from "../controllers/numController.js";
+import { validateLectura, validateNewNum } from "../validators/numValidator.js";
 
 const router = Router();
 
 router.get("/", getNums);
-router.post("/", validateNewNum, newNum);
+router.post("/nuevoNum", validateNewNum, newNum);
+router.post("/lectura", validateLectura, dailyLecture);
 
 export default router;
