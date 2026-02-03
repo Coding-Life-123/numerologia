@@ -1,4 +1,5 @@
 import pool from "../config/db.js";
+import userModel from "../modelsMongo/userModel.js";
 
 export async function createUser({
   nombre,
@@ -7,10 +8,15 @@ export async function createUser({
 }) {
   console.log(`${nombre}\n${email}\n${fecha_nacimiento}\ninactivo`);
   try {
-    const [result] = await pool.execute(
+    /*const [result] = await pool.execute(
       "INSERT INTO users (nombre, email, fecha_nacimiento, estado) VALUES (?, ?, ?, ?)",
       [nombre, email, fecha_nacimiento, "inactivo"]
-    );
+    );*/
+    const result = await userModel.create({
+      name: nombre,
+      email: email,
+      birth_date: fecha_nacimiento
+    })
     return result;
   } catch (error) {
     throw new Error("Error al crear el usuario: " + error.message);
