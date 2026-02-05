@@ -29,7 +29,7 @@ export const dailyLecture = async(req, res)=>{
 
     const content = {
       id: req.params.id,
-      tipo:"diaria",
+      tipo:"daily",
       lectura,
       fecha_lectura:hoy
     }
@@ -57,7 +57,7 @@ export const mainLecture = async(req, res)=>{
 
     const content = {
       id: req.params.id,
-      tipo:"principal",
+      tipo:"main",
       lectura,
       fecha_lectura:hoy
     }
