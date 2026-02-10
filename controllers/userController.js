@@ -1,9 +1,12 @@
-import { createUser, deleteUserModel, estadoUserModel, getUsersModel, updateUsersModel } from "../models/userModel.js";
+import { createUser, deleteUserModel, estadoUserModel, getPasswordModel, getUserByEmailModel, getUsersModel, updateUsersModel } from "../models/userModel.js";
+import bcrypt from "bcryptjs";
 
 export const newUser = async (req, res) => {
   try {
+    const salt = await bcrypt.genSalt(10);
+    req.body.password = await bcrypt.hash(req.body.password, salt);   
     const usuario = await createUser(req.body, res);
-    console.log(req.body);
+    
     res.status(201).json(usuario);
   } catch (error) {
     console.log(error);
@@ -12,7 +15,7 @@ export const newUser = async (req, res) => {
 };
 
 export const getUsers = async (req, res) => {
-  console.log(req.params.id);
+  
   try {
     const users = await getUsersModel(req.params);
     res.status(200).json({ message: "Lista de usuarios", users: users });
@@ -21,6 +24,24 @@ export const getUsers = async (req, res) => {
     res.status(500).json({ message: "Error interno del servidor" });
   };
 };
+
+export const loginUser = async (req, res)=>{
+  const passHash = await getPasswordModel(req.body.email);
+  const inputPass = req.body.password;
+  console.log(passHash.password)
+  console.log(inputPass)
+  const isValid = await bcrypt.compare(inputPass, passHash.password);
+  if(!isValid){
+    res.status(500).json({ message: "Contraseña incorrecta" });
+  }
+  try{
+    const user = await getUserByEmailModel(req.body.email);
+    res.status(200).json({messaje:"Inicio de sesión exitoso!", user})
+  }catch(error){
+    console.log("error controlador login")
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+}
 
 export const updateUser = async (req, res) => {
   const {id} = req.params;

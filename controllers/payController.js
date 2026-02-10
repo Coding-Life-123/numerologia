@@ -20,7 +20,7 @@ export const newPayment = async(req, res) => {
         res.status(201).json({newPay, userPaid});
     }catch(error){
         console.log(error);
-        res.status(500).json({message:"Error interno del servidor"});
+        res.status(500).json({message:"Error interno del servidor", error});
     }
 }
 
@@ -31,7 +31,7 @@ export const getPayment = async (req, res) => {
     res.status(200).json({ message: "Lista de pagos", payments });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Error interno del servidor" });
+    res.status(500).json({ message: "Error interno del servidor", error });
   };
 };
 

@@ -1,12 +1,13 @@
-import pool from "../config/db.js";
+//import pool from "../config/db.js";
 import userSchema from "../schemas/userModel.js";
 
 export async function createUser({
   nombre,
   email,
+  password,
   fecha_nacimiento
 }) {
-  console.log(`${nombre}\n${email}\n${fecha_nacimiento}\ninactivo`);
+  console.log(`${nombre}\n${email}\n${password}\n${fecha_nacimiento}\ninactivo`);
   try {
     /*const [result] = await pool.execute(
       "INSERT INTO users (nombre, email, fecha_nacimiento, estado) VALUES (?, ?, ?, ?)",
@@ -15,6 +16,7 @@ export async function createUser({
     const result = await userSchema.create({
       name: nombre,
       email: email,
+      password: password,
       birth_date: fecha_nacimiento
     })
     return result;
@@ -46,6 +48,26 @@ export async function getUsersModel(params = {}) {
     throw new Error("Error al obtener los usuarios: " + error.message);
   };
 };
+
+export async function getUserByEmailModel(email){
+  try{
+    const user = await userSchema.find({email:email})
+    return user
+  }catch(error){
+    console.log(error)
+    throw new Error("Error interno del servidor")
+  }
+}
+
+export async function getPasswordModel(email){
+  try{
+    const password = await userSchema.findOne({email: email}).select("password");
+    return password;
+  }catch(error){
+    console.log(error);
+    throw new Error("Error interno del servidor");
+  }
+}
 
 export async function updateUsersModel(id, params = {}){
   const fields = params;

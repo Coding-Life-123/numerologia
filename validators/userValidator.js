@@ -1,4 +1,6 @@
 import { body, param, validationResult } from "express-validator";
+import userSchema from "../schemas/userModel.js";
+import mongoose from "mongoose";
 
 export const validateNewUser = [
   body("nombre")
@@ -10,7 +12,20 @@ export const validateNewUser = [
     .isString()
     .withMessage("El email debe ser una cadena de texto")
     .notEmpty()
-    .withMessage("El email es requerido"),
+    .withMessage("El email es requerido")
+    .custom(async (email)=>{
+      const user = await userSchema.findOne({
+        email
+      })
+
+      if(user){
+        throw new Error("Este email ya está registrado");
+      }
+      return true;
+    }),
+  body("password")
+    .notEmpty()
+    .withMessage("La contraseña es requerida"),
   body("fecha_nacimiento")
     .isString()
     .withMessage("La fecha de nacimiento debe ser una cadena de texto")
@@ -19,11 +34,36 @@ export const validateNewUser = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array()[0].msg });
     }
     next();
   },
 ];
+
+export const validateLogin = [
+  body("email")
+    .notEmpty()
+    .withMessage("El email es requerido")
+    .isEmail()
+    .withMessage("Email no válido")
+    .custom(async(email)=>{
+      const user = userSchema.find({email: email});
+      if(!user){
+        throw new Error("Usuario no encontrado");
+      }
+      return true;
+    }),
+  body("password")
+    .notEmpty()
+    .withMessage("La contraseña es requerida"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array()[0].msg });
+    }
+    next();
+  },
+]
 
 export const validateUpdateUser = [
   param("id")
@@ -38,7 +78,17 @@ export const validateUpdateUser = [
   body("email")
     .optional()
     .isString()
-    .withMessage("El nombre debe ser una cadena de texto"),
+    .withMessage("El nombre debe ser una cadena de texto")
+    .custom(async (email)=>{
+      const user = await userSchema.findOne({
+        email
+      })
+
+      if(user){
+        throw new Error("Este email ya está registrado");
+      }
+      return true;
+    }),
   body("fecha_nacimiento")
     .optional()
     .isString()
@@ -47,5 +97,64 @@ export const validateUpdateUser = [
     .optional()
     .isString()
     .withMessage("El nombre debe ser una cadena de texto"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array()[0].msg });
+    }
+    next();
+  },
+]
+
+export const validateDeleteUser = [
+  param("id")
+    .notEmpty()
+    .withMessage("El Id es requerido")
+    .custom(async(id)=>{     
+      if(!mongoose.Types.ObjectId.isValid(id)){
+        throw new Error("el id no es válido");
+      }
+    })
+    .custom(async(id)=>{
+      const user = await userSchema.findById(id);
+
+      if(!user){
+        throw new Error("Este usuario no existe");
+      }
+      return true
+    }),
+  body("nombre")
+    .optional()
+    .isString()
+    .withMessage("El nombre debe ser una cadena de texto"),
+  body("email")
+    .optional()
+    .isString()
+    .withMessage("El nombre debe ser una cadena de texto")
+    .custom(async (email)=>{
+      const user = await userSchema.findOne({
+        email
+      })
+
+      if(!user){
+        throw new Error("Este usuario no está registrado");
+      }
+      return true;
+    }),
+  body("fecha_nacimiento")
+    .optional()
+    .isString()
+    .withMessage("El nombre debe ser una cadena de texto"),
+  body("estado")
+    .optional()
+    .isString()
+    .withMessage("El nombre debe ser una cadena de texto"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array()[0].msg });
+    }
+    next();
+  },
 ]
 
