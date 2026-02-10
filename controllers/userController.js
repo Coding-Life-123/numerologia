@@ -1,13 +1,20 @@
 import { createUser, deleteUserModel, estadoUserModel, getPasswordModel, getUserByEmailModel, getUsersModel, updateUsersModel } from "../models/userModel.js";
 import bcrypt from "bcryptjs";
+import jwt from 'jsonwebtoken'
 
 export const newUser = async (req, res) => {
   try {
     const salt = await bcrypt.genSalt(10);
     req.body.password = await bcrypt.hash(req.body.password, salt);   
     const usuario = await createUser(req.body, res);
-    
-    res.status(201).json(usuario);
+    console.log(usuario)
+    const token = jwt.sign(
+      { uid: usuario._id, },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.status(201).json({usuario, token});
   } catch (error) {
     console.log(error);
     res.status(500).json({ Error: error });
@@ -35,8 +42,13 @@ export const loginUser = async (req, res)=>{
     res.status(500).json({ message: "Contraseña incorrecta" });
   }
   try{
-    const user = await getUserByEmailModel(req.body.email);
-    res.status(200).json({messaje:"Inicio de sesión exitoso!", user})
+    const user = await getUserByEmailModel(req.body.email);    
+    const token = jwt.sign(
+      { uid: user[0]._id, },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    res.status(200).json({messaje:"Inicio de sesión exitoso!", user, token})
   }catch(error){
     console.log("error controlador login")
     res.status(500).json({ message: "Error interno del servidor" });
