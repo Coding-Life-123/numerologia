@@ -1,7 +1,7 @@
 import { body, param, validationResult } from "express-validator";
-import paySchema from "../schemas/payModel.js";
+import paySchema from "../schemas/paySchema.js";
 import mongoose from "mongoose";
-import userSchema from "../schemas/userModel.js";
+import userSchema from "../schemas/userSchema.js";
 
 export const validatePayUser = [
     param("id")

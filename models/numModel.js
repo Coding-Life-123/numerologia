@@ -1,5 +1,5 @@
 import pool from "../config/db.js";
-import lectureSchema from "../schemas/lectureModel.js"
+import lectureSchema from "../schemas/lectureSchema.js"
 
 export async function createLectureModel({ id, tipo, lectura}) {
   try {

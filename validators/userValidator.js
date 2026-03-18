@@ -1,5 +1,5 @@
-import { body, param, validationResult } from "express-validator";
-import userSchema from "../schemas/userModel.js";
+import { body, header, param, validationResult } from "express-validator";
+import userSchema from "../schemas/userSchema.js";
 import mongoose from "mongoose";
 
 export const validateNewUser = [
@@ -66,11 +66,11 @@ export const validateLogin = [
 ]
 
 export const validateUpdateUser = [
-  param("id")
+  header("authorization")
     .notEmpty()
-    .withMessage("El Id es requerido")
-    .isNumeric()
-    .withMessage("El id debe ser de tipo numérico"),
+    .withMessage("Token es requerido")
+    .isString()
+    .withMessage("Token no válido"),
   body("nombre")
     .optional()
     .isString()
@@ -109,12 +109,12 @@ export const validateUpdateUser = [
 export const validateDeleteUser = [
   param("id")
     .notEmpty()
-    .withMessage("El Id es requerido")
-    .custom(async(id)=>{     
-      if(!mongoose.Types.ObjectId.isValid(id)){
-        throw new Error("el id no es válido");
-      }
-    })
+    .withMessage("el id es requerido")
+    // .custom(async(id)=>{     
+    //   if(!mongoose.Types.ObjectId.isValid(id)){
+    //     throw new Error("el id no es válido");
+    //   }
+    // })
     .custom(async(id)=>{
       const user = await userSchema.findById(id);
 

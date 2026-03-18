@@ -1,5 +1,5 @@
 //import pool from "../config/db.js";
-import userSchema from "../schemas/userModel.js";
+import userSchema from "../schemas/userSchema.js";
 
 export async function createUser({
   nombre,
@@ -154,3 +154,38 @@ export async function getEstadoModel({id}){
     throw new Error("Error interno del servidor");
   };
 };
+
+export async function setResetCodeModel(email, code, expireDate) {
+  try {
+    const user = await userSchema.findOneAndUpdate(
+      { email: email },
+      { 
+        $set: { 
+          resetCode: code, 
+          codeExpireDate: expireDate 
+        } 
+      },
+      { new: true }
+    );
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error al guardar el código de reset");
+  }
+}
+
+export async function clearResetCodeModel(email) {
+  try {
+    await userSchema.findOneAndUpdate(
+      { email: email },
+      { 
+        $set: { 
+          resetCode: null, 
+          codeExpireDate: null 
+        } 
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+}
