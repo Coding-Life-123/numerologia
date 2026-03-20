@@ -152,7 +152,7 @@ router.post("/reset-password", resetPasswordUser);
  *       200:
  *         description: Lista de usuarios
  */
-router.get("/", getUsers);
+router.get("/", validarAdminJWT, getUsers);
 
 /**
  * @swagger

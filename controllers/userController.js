@@ -6,6 +6,7 @@ import userSchema from "../schemas/userSchema.js";
 
 export const newUser = async (req, res) => {
   try {
+    console.log("Contraseña enviada:", req.body.password);
     const salt = await bcrypt.genSalt(10);
     req.body.password = await bcrypt.hash(req.body.password, salt);   
     const usuario = await createUser(req.body, res);
