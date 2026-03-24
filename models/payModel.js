@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import pool from "../config/db.js";
 import paymentSchema from "../schemas/paySchema.js"
 
 export async function newPaymentModel(id, params) {

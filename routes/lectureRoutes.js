@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { dailyLecture, getLecture, mainLecture } from "../controllers/numController.js";
-import { validateLectura } from "../validators/numValidator.js";
+import { dailyLecture, getLecture, mainLecture } from "../controllers/lectureController.js";
+import { validateLectura } from "../validators/lectureValidator.js";
 import { validarJWT } from "../middlewares/authJWT.js";
 
 const router = Router();

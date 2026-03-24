@@ -1,5 +1,5 @@
-import pedirLectura from "../services/numAI.js";
-import { createLectureModel, getLectureModel } from "../models/numModel.js";
+import pedirLectura from "../services/lectureAI.js";
+import { createLectureModel, getLectureModel } from "../models/lectureModel.js";
 
 export const getLecture = async(req, res)=>{
   const {id, lectureId} = req.params

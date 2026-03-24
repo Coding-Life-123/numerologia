@@ -1,4 +1,3 @@
-//import pool from "../config/db.js";
 import userSchema from "../schemas/userSchema.js";
 
 export async function createUser({
@@ -188,4 +187,4 @@ export async function clearResetCodeModel(email) {
   } catch (error) {
     console.log(error);
   }
-}
+}
