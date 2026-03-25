@@ -15,7 +15,7 @@ const paymentSchema = new mongoose.Schema(
         },
         method:{
             type: String,
-            enum: ["card", "cash", "trasnfer"],
+            enum: ["card", "cash", "trasnfer", "mercadopago"],
             required: true
         },
         payment_date:{
@@ -25,7 +25,21 @@ const paymentSchema = new mongoose.Schema(
         },
         expire_date:{
             type: Date,
-            required: true
+            required: false
+        },
+        descripcion: {
+            type: String
+        },
+        estado: {
+            type: String,
+            enum: ["pendiente", "aprobado", "rechazado", "fallido"],
+            default: "pendiente"
+        },
+        mpPreferenceId: {
+            type: String
+        },
+        mpPaymentId: {
+            type: String
         }
     },
     {

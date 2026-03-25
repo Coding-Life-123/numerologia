@@ -6,9 +6,10 @@ export const getLecture = async(req, res)=>{
   console.log(id, lectureId)
   try{
     const resLecture = await getLectureModel(id, lectureId);
+    console.log("Éxito en lectureController - getLecture: Lectura entregada exitosamente.");
     res.status(200).json(resLecture);
   }catch(error){
-    console.log(error);
+    console.log("Error en lectureController - getLecture:", error);
     res.status(500).json("error interno del servidor");
   }
 }
@@ -38,9 +39,10 @@ export const dailyLecture = async(req, res)=>{
 
     const guardarLectura = await createLectureModel(content);
 
+    console.log("Éxito en lectureController - dailyLecture: Nueva lectura diaria generada mediante IA.");
     res.status(201).json(content, guardarLectura);
   } catch (error){
-    console.log(error);
+    console.log("Error en lectureController - dailyLecture:", error);
     res.status(500).json({message: "Error interno del servidor"});
   }
 };
@@ -66,9 +68,10 @@ export const mainLecture = async(req, res)=>{
 
     const guardarLectura = await createLectureModel(content)
 
+    console.log("Éxito en lectureController - mainLecture: Nueva lectura principal generada mediante IA.");
     res.status(201).json(guardarLectura);
   } catch (error){
-    console.log(error);
+    console.log("Error en lectureController - mainLecture:", error);
     res.status(500).json({message: "Error interno del servidor"});
   }
 };

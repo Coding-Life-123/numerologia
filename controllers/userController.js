@@ -17,9 +17,10 @@ export const newUser = async (req, res) => {
       { expiresIn: "1h" }
     );
 
+    console.log("Éxito en userController - newUser: Usuario creado exitosamente.");
     res.status(201).json({usuario, token, msg: "Hola puta"});
   } catch (error) {
-    console.log(error);
+    console.log("Error en userController - newUser:", error);
     res.status(500).json({ Error: error });
   };
 };
@@ -27,15 +28,17 @@ export const newUser = async (req, res) => {
 export const getUsers = async (req, res) => {
   try {
     const users = await getUsersModel(req.params);
+    console.log("Éxito en userController - getUsers: Usuarios obtenidos.");
     res.status(200).json({ message: "Lista de usuarios", users: users });
   } catch (error) {
-    console.log(error);
+    console.log("Error en userController - getUsers:", error);
     res.status(500).json({ message: "Error interno del servidor" });
   };
 };
 
 export const loginUser = async (req, res) => {
   try {
+    console.log("Cuerpo de la petición en login:", req.body);
     const passHash = await getPasswordModel(req.body.email);
     if (!passHash) {
       return res.status(401).json({ message: "Usuario no encontrado" });
@@ -60,9 +63,10 @@ export const loginUser = async (req, res) => {
       { expiresIn: "1h" }
     );
 
+    console.log("Éxito en userController - loginUser: Usuario autenticado.");
     return res.status(200).json({ messaje: "Inicio de sesión exitoso!", user, token });
   } catch (error) {
-    console.log("error controlador login", error);
+    console.log("Error en userController - loginUser:", error);
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 }
@@ -98,9 +102,10 @@ export const requestPasswordReset = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
+    console.log("Éxito en userController - requestPasswordReset: Código de recuperación enviado a", email);
     return res.status(200).json({ message: "Código enviado al correo" });
   } catch (error) {
-    console.log(error);
+    console.log("Error en userController - requestPasswordReset:", error);
     return res.status(500).json({ message: "Error al solicitar el código de recuperación" });
   }
 };
@@ -134,9 +139,10 @@ export const resetPasswordUser = async(req, res)=>{
     user.codeExpireDate = null;
     await user.save();
 
+    console.log("Éxito en userController - resetPasswordUser: Contraseña restablecida.");
     return res.status(200).json({ message: "Contraseña actualizada exitosamente" });
   } catch (error) {
-    console.log(error);
+    console.log("Error en userController - resetPasswordUser:", error);
     return res.status(500).json({ message: "Error interno al restablecer la contraseña" });
   }
 }
@@ -149,10 +155,10 @@ export const updateUser = async (req, res) => {
   }
   try{
     const userUpdated = await updateUsersModel(id, req.body);
-    console.log(userUpdated);
+    console.log("Éxito en userController - updateUser: Usuario modificado.");
     res.status(200).json(userUpdated);
   }catch(error){
-    console.log(error);
+    console.log("Error en userController - updateUser:", error);
     res.status(500).json({ message: "Error interno del servidor" });
   };
 };
@@ -161,10 +167,10 @@ export const deleteUser = async (req, res) => {
   const {id} = req.params;
   try{
     const userDelete = await deleteUserModel(id);
-    console.log(userDelete);
+    console.log("Éxito en userController - deleteUser: Usuario eliminado.");
     res.status(200).json(userDelete);
   }catch(error){
-    console.log(error);
+    console.log("Error en userController - deleteUser:", error);
     res.status(500).json({message: "Error interno del servidor"});
   };
 };
@@ -173,9 +179,10 @@ export const estadoUser = async(req, res)=>{
   const {id} = req.params;
   try{
     const estadoUpdated = await estadoUserModel(id, req.body);
+    console.log("Éxito en userController - estadoUser: Estado modificado.");
     res.status(200).json(estadoUpdated);
   }catch(error){
-    console.log(error);
+    console.log("Error en userController - estadoUser:", error);
     res.status(500).json({ message: "Error interno del servidor" }); 
   };
 };

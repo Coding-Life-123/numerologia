@@ -43,7 +43,7 @@ export const validateNewUser = [
 export const validateLogin = [
   body("email")
     .notEmpty()
-    .withMessage("El email es requerido")
+    .withMessage("El email es requerido puto")
     .isEmail()
     .withMessage("Email no válido")
     .custom(async(email)=>{

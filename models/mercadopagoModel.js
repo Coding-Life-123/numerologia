@@ -1,6 +1,6 @@
 import { configureMercadoPago, mercadopago } from "../config/mercadopago.js";
-import Pago from "../models/pagos.js";
-import Usuario from "../models/usuario.js";
+import Pago from "../schemas/paySchema.js";
+import Usuario from "../schemas/userSchema.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
@@ -27,8 +27,9 @@ export async function crearPreferenciaModel(usuarioId, monto, titulo) {
   });
 
   const nuevoPago = new Pago({
-    usuarioId: usuarioId.toString(),
-    monto: montoFinal,
+    user_id: usuarioId.toString(),
+    amount: montoFinal,
+    method: "mercadopago",
     descripcion: titulo || "Plan Numeris",
     estado: "pendiente",
     mpPreferenceId: response.body.id,
@@ -62,7 +63,7 @@ export async function recibirNotificacionModel(topic, paymentId) {
 
     if (pago) {
       await Usuario.collection.updateOne(
-        { _id: new mongoose.Types.ObjectId(pago.usuarioId) },
+        { _id: new mongoose.Types.ObjectId(pago.user_id) },
         { $set: { estado: 1 } }
       );
     }
@@ -86,10 +87,10 @@ export async function verificarPagoModel(paymentId) {
   let usuarioActualizado = null;
   if (pago) {
     await Usuario.collection.updateOne(
-      { _id: new mongoose.Types.ObjectId(pago.usuarioId) },
+      { _id: new mongoose.Types.ObjectId(pago.user_id) },
       { $set: { estado: 1 } }
     );
-    usuarioActualizado = await Usuario.findById(pago.usuarioId);
+    usuarioActualizado = await Usuario.findById(pago.user_id);
   }
 
   return { success: true, status: "approved", usuario: usuarioActualizado };
