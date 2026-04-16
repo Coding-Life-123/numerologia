@@ -10,7 +10,7 @@ export async function newPaymentModel(id, params) {
       [id, monto, fecha_pago, fecha_vencimiento, metodo]
     );*/
 
-    const payment = paymentSchema.create({
+    const payment = await paymentSchema.create({
       user_id: id,
       amount: monto,
       method: metodo,
