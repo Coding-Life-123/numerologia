@@ -6,7 +6,7 @@ import {
 
 export const crearPreferencia = async (req, res) => {
   const { monto, titulo } = req.body;
-  const usuarioId = req.usuario?._id || req.usuario?.id;
+  const usuarioId = req.user?.uid || req.user?._id || req.user?.id;
   console.log(`\n[MP] INICIO: crearPreferencia | UsuarioID: ${usuarioId} | Monto: ${monto} | Título: ${titulo}`);
 
   if (!usuarioId) {

@@ -1,33 +1,35 @@
 import nodeCron from "node-cron";
-import pool from "../config/db.js";
+import Usuario from "../schemas/userSchema.js";
+import Pago from "../schemas/paySchema.js";
 
 export const startCronMemberships = () => {
-    nodeCron.schedule("0 0 * * *", async()=>{
-        console.log("Ejecutando validación diaria de membresías...");
+  nodeCron.schedule("0 0 * * *", async () => {
+    console.log("⏰ Ejecutando validación diaria de membresías...");
 
-        try{
-            const hoy = new Date().toISOString().split("T")[0];
+    try {
+      const hoy = new Date();
 
-            const [pagosVencidos] = await pool.execute(
-                `SELECT usuario_id FROM pagos WHERE fecha_vencimiento < ?`,
-                [hoy]
-            );
+      // Buscar pagos aprobados cuya fecha de expiración ya pasó
+      const pagosVencidos = await Pago.find({
+        estado: "aprobado",
+        expire_date: { $lt: hoy },
+      });
 
-            if(pagosVencidos.length=== 0){
-                console.log("No hay pagos vencidos hoy");
-                return;
-            }
+      if (pagosVencidos.length === 0) {
+        console.log("✅ No hay membresías vencidas hoy.");
+        return;
+      }
 
-            for(const pago of pagosVencidos){
-                await pool.execute(
-                    `UPDATE users SET estado = 'inactivo' WHERE id = ?`,
-                    [pago.usuario_id]
-                );
-            }
+      // Extraer IDs de usuarios únicos
+      const usuariosVencidos = [...new Set(pagosVencidos.map((p) => p.user_id.toString()))];
 
-            console.log(`${pagosVencidos.length} usuarios pasaron a inactivo.`);
-        }catch(error){
-            console.error("Error ejecutando CronMemberships:", error);
-        }
-    });
+      for (const userId of usuariosVencidos) {
+        await Usuario.findByIdAndUpdate(userId, { $set: { status: "inactivo" } });
+      }
+
+      console.log(`⚠️ ${usuariosVencidos.length} usuarios pasaron a estado inactivo.`);
+    } catch (error) {
+      console.error("❌ Error ejecutando CronMemberships:", error.message);
+    }
+  });
 };
